@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Face tracker</title>
+    <meta charset="utf-8">
+    <style>
+        #container {
+        				position : relative;
+        			}
+        
+        			#canvas {
+        				position : absolute;
+        				left : 0;
+        				top : 0;
+        			}
+    </style>
+</head>
+
+<body>
+    <script src="utils.js"></script>
+    <script src="clmtrackr.js"></script>
+    <div id="content">
+        <h2>comma.ai challenge</h2>
+        <p>This library also allows for emotion detection: <a href="https://github.com/auduno/clmtrackr">https://github.com/auduno/clmtrackr</a></p>
+        <p><a href="index.html">VIDEO_1</a> | <a href="2.html">VIDEO_2</a> | <a href="3.html">VIDEO_3</a> | <a href="4.html">VIDEO_4</a></p>
+        <div id="container">
+            <table>
+                <tr>
+                    <td><video id="video" width="368" height="288" autoplay loop playsinline>
+					<source src="video_1.mp4" type="video/mp4"/>
+					
+				</video><canvas id="canvas" width="368" height="288"></canvas>
+                        <p>Coordinates of facial features:</p>
+                        <p id="positions"></p>
+                    </td>
+
+
+                </tr>
+
+        </div>
+
+
+        <script>
+            var videoInput = document.getElementById('video');
+            
+            				var ctracker = new clm.tracker();
+            				var vid = document.getElementById('video');
+            				ctracker.init();
+            				vid.play();
+            				ctracker.start(videoInput);
+            
+            				function positionLoop() {
+            					requestAnimFrame(positionLoop);
+            					var positions = ctracker.getCurrentPosition();
+            					// do something with the positions ...
+            					// print the positions
+            					var positionString = "";
+            					if (positions) {
+            						for (var p = 0;p < 10;p++) {
+            							positionString += "Facial Attribute "+p+" : ["+positions[p][0].toFixed(2)+","+positions[p][1].toFixed(2)+"]<br/>";
+            						}
+            						document.getElementById('positions').innerHTML = positionString;
+            					}
+            				}
+            				positionLoop();
+            
+            				var canvasInput = document.getElementById('canvas');
+            				var cc = canvasInput.getContext('2d');
+            				function drawLoop() {
+            					requestAnimFrame(drawLoop);
+            					cc.clearRect(0, 0, canvasInput.width, canvasInput.height);
+            					ctracker.draw(canvasInput);
+            				}
+            				drawLoop();
+        </script>
+    </div>
+</body>
+
+</html>
